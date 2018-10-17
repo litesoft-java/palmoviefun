@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -91,7 +92,8 @@ public class AlbumsController {
         if (coverFile.exists()) {
             coverFilePath = coverFile.toPath();
         } else {
-            coverFilePath = Paths.get(getSystemResource("default-cover.jpg").toURI());
+            URL systemResource = AlbumsController.class.getResource("/default-cover.jpg");
+            coverFilePath = Paths.get(systemResource.toURI());
         }
 
         return coverFilePath;
