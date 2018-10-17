@@ -51,7 +51,7 @@
       <a class="btn btn-navbar" data-toggle="collapse"
          data-target=".nav-collapse"> <span class="icon-bar"></span> <span
           class="icon-bar"></span> <span class="icon-bar"></span>
-      </a> <a class="brand" href="#">Moviefun</a>
+      </a> <a class="brand" href="/moviefun">Moviefun</a>
 
       <form class="navbar-form pull-right">
         <select name="field">
