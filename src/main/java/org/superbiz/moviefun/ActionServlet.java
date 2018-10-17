@@ -18,10 +18,10 @@ package org.superbiz.moviefun;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionOperations;
 import org.superbiz.moviefun.movies.Movie;
 import org.superbiz.moviefun.movies.MoviesBean;
 
-import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,8 +39,13 @@ public class ActionServlet extends HttpServlet {
 
     public static int PAGE_SIZE = 5;
 
-    @EJB
-    private MoviesBean moviesBean;
+    private final TransactionOperations moviesTransactionOperations;
+    private final MoviesBean moviesBean;
+
+    public ActionServlet(TransactionOperations moviesTransactionOperations, MoviesBean moviesBean) {
+        this.moviesTransactionOperations = moviesTransactionOperations;
+        this.moviesBean = moviesBean;
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -65,16 +70,27 @@ public class ActionServlet extends HttpServlet {
 
             Movie movie = new Movie(title, director, genre, rating, year);
 
-            moviesBean.addMovie(movie);
+            moviesTransactionOperations.execute(transactionStatus -> {
+                moviesBean.addMovie(movie);
+                return null;
+            });
+
+
             response.sendRedirect("moviefun");
             return;
 
         } else if ("Remove".equals(action)) {
 
             String[] ids = request.getParameterValues("id");
-            for (String id : ids) {
-                moviesBean.deleteMovieId(new Long(id));
-            }
+
+            moviesTransactionOperations.execute(transactionStatus -> {
+
+                for (String id : ids) {
+                    moviesBean.deleteMovieId(new Long(id));
+                }
+                return null;
+            });
+
 
             response.sendRedirect("moviefun");
             return;
