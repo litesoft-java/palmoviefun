@@ -1,7 +1,9 @@
 package org.superbiz.moviefun.blobstore;
 
+import io.minio.ErrorCode;
 import io.minio.MinioClient;
 import io.minio.ObjectStat;
+import io.minio.errors.ErrorResponseException;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
 
@@ -70,6 +72,12 @@ public class MinioStore implements BlobStore {
             ObjectStat objectStat = minioClient.statObject(bucketName, objectKey);
             contentType = objectStat.contentType();
             stream = minioClient.getObject(bucketName, objectKey);
+        } catch (ErrorResponseException e) {
+            ErrorCode errorCode = e.errorResponse().errorCode();
+            if (errorCode == ErrorCode.NO_SUCH_KEY) {
+                return Optional.empty();
+            }
+            throw new IOException(e);
         } catch (Exception e) {
             throw new IOException(e);
         }
