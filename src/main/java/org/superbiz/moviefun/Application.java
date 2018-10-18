@@ -1,5 +1,6 @@
 package org.superbiz.moviefun;
 
+//import io.minio.AwsS3Endpoints;
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -42,11 +43,11 @@ public class Application {
 //    }
 
     @Bean
-    public BlobStore s3Store(ServiceCredentials serviceCredentials,
-                             @Value("${vcap.services.photo-storage.credentials.endpoint:#{null}}") String minioUrl) throws Exception {
-        String minioBucketName = serviceCredentials.getCredential("photo-storage", "user-provided", "bucket");
-        String minioAccess = serviceCredentials.getCredential("photo-storage", "user-provided", "access_key_id");
-        String minioSecret = serviceCredentials.getCredential("photo-storage", "user-provided", "secret_access_key");
+    public BlobStore s3Store(ServiceCredentials serviceCredentials ) throws Exception {
+        String minioUrl = "s3.amazonaws.com"; // serviceCredentials.getCredential("photo-storage", "aws-s3", "region");
+        String minioBucketName = serviceCredentials.getCredential("photo-storage", "aws-s3", "bucket");
+        String minioAccess = serviceCredentials.getCredential("photo-storage", "aws-s3", "access_key_id");
+        String minioSecret = serviceCredentials.getCredential("photo-storage", "aws-s3", "secret_access_key");
 
         return new MinioStore(new MinioClient(minioUrl, minioAccess, minioSecret), minioBucketName, "george-graham/");
     }
