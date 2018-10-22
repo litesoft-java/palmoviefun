@@ -1,0 +1,11 @@
+applications:
+- name: moviefun
+  path: ./target/moviefun.war
+  routes:
+  - route: moviefun-graham-george.apps.evans.pal.pivotal.io
+  memory: 1G
+  instances: 1
+  services:
+  - movies-mysql
+  - photo-storage
+  - rabbit

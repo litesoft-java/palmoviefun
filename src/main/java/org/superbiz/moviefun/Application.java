@@ -12,6 +12,7 @@ import org.superbiz.moviefun.blobstore.BlobStore;
 import org.superbiz.moviefun.blobstore.S3Store;
 import org.superbiz.moviefun.blobstore.ServiceCredentials;
 
+@SuppressWarnings("unused")
 @SpringBootApplication
 public class Application {
 
@@ -29,6 +30,7 @@ public class Application {
         return new ServiceCredentials(vcapServices);
     }
 
+    @SuppressWarnings("deprecation")
     @Bean
     public BlobStore blobStore(
         ServiceCredentials serviceCredentials,
